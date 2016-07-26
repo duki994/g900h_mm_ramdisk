@@ -1,0 +1,72 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:Battery,
+    elements:[
+	{ SDescription:{ 
+		description:"Device charging currents are composed of input current coming into the device (Nominal 5V) and charge current fed to the battery (Battery Charge Voltage). Charger detection divides charging cable types into several categories as described below. If charging current exceeds input load, then charging current is dynamically adjusted. For avoiding battery deterioration, charging currents of less than 0.7 Coloumb are advised; ex. 2600mAh (Capacity) * 0.7C = ~1820mA."
+	}},
+	{ SLiveLabel:{
+                  action:"echo \"Average: \$(cat /sys/bus/platform/drivers/sec-battery/battery.29/power_supply/battery/current_avg)mA\""
+        }},
+	{ SLiveLabel:{
+                  action:"echo \"Now: \$(cat /sys/bus/platform/drivers/sec-battery/battery.29/power_supply/battery/current_now)mA\""
+        }},
+	{ SDescription:{
+		description:"Current battery voltage expressed in microvolts. For example 4000000uV is 4000mV, and that is 4V"
+	}},
+	{ SLiveLabel:{
+		action:"echo \"Now: \$(cat /sys/bus/platform/drivers/sec-battery/battery.29/power_supply/battery/voltage_now)uV\""
+	}},
+	{ SLiveLabel:{
+		action:"echo \"Charge control status: \$(cat /sys/kernel/charge_control/charge_info)\""
+	}},
+	{ SDescription:{ 
+		description:"Input is the live current limit coming through the USB port into the device at 5V. Charge is the desired target current to charge the battery. Now is the actual current limit applied to the battery."
+	}},
+	{ SPane:{ 
+		title:"Charging logic",
+		description:"If control/controls are set to 0, that means that charging driver will operate in stock Samsung mode."
+	}},
+	{ SPane:{
+		title:"AC/Mains",
+		description:"AC or mains current limits applied to designated dedicated chargers and corresponding cables."
+	}},
+	{ SSeekBar:{
+		title:"AC/Mains Charge Current",
+		min:0, max:2200, unit:"mA", step:50,
+		default:`cat /sys/kernel/charge_control/charge_control_ac`,
+                action:"generic /sys/kernel/charge_control/charge_control_ac"
+	}},
+	{ SPane:{
+		title:"USB",
+		description:"USB current limits applied to designated dedicated chargers and corresponding cables."
+	}},
+	{ SSeekBar:{
+		title:"USB Charge Current",
+		min:0, max:2200, unit:"mA", step:50,
+		default:`cat /sys/kernel/charge_control/charge_control_usb`,
+                action:"generic /sys/kernel/charge_control/charge_control_usb"
+	}},
+	{ SPane:{
+		title:"Wireless",
+		description:"Wireless current limits applied to designated dedicated chargers and corresponding cables."
+	}},
+	{ SSeekBar:{
+		title:"Wireless Charge Current",
+		min:0, max:1000, unit:"mA", step:50,
+		default:`cat /sys/kernel/charge_control/charge_control_wireless`,
+                action:"generic /sys/kernel/charge_control/charge_control_wireless"
+	}},
+	{ SPane:{ 
+		title:"Reset battery percentage counter",
+		description:"Reset battery percentage counter if it shows wrong percentage or is not calibrated. Wait for some time before battery percentage reading gets stable"
+	}},
+	{ SButton: {
+		label:"Reset battery percentage counter",
+		action:"batteryreset"
+	}},
+    ]
+}
+CTAG

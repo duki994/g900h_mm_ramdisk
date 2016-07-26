@@ -1,0 +1,34 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+	name:"HMP tuning",
+	elements:[
+		{ SPane:{ 
+			title:"HMP thresholds",
+			description:"down_threshold is MINIMUM load threshold when tasks are being migrated from A15 (high-performance cluster) to A7 (power-saving cluster) cores.Lower the value => more tasks on A7 cores. up_threshold definition: MAXIMUM load before tasks are migrated from A7 to A15 cores. Lower the value => better performance but more heat and battery drain."
+		}},
+		{ SSeekBar:{
+			title:"HMP down_threshold",
+			default:`cat /sys/kernel/hmp/down_threshold`,
+			action:"generic /sys/kernel/hmp/down_threshold",
+			min:0, step:1, max:690
+		}},
+		{ SSeekBar:{
+			title:"HMP up_threshold",
+			default:`cat /sys/kernel/hmp/up_threshold`,
+			action:"generic /sys/kernel/hmp/up_threshold",
+			min:0, step:1, max:750
+		}},
+		{ SPane:{ 
+			title:"HMP little packing",
+			description:"HMP little packing is update to HMP(Heterogenous Multi Processing) mechanism. HMP is mechanism that allows our SoC to fire all 8 cores at once if needed. Little packing mechanism packs tasks more carefully and puts more tasks on little A7 cores. It's possible that there will be a little performance tradeoff in favour of better battery life. NOTE: This is experimental."
+		}},
+		{ SCheckBox:{
+		   	description:"HMP little packing switch ON/OFF. Checkbox is right above this text",
+		   	default:`cat /sys/kernel/hmp/packing_enable`,
+		   	action:"generic /sys/kernel/hmp/packing_enable"
+		}},
+	]
+}
+CTAG

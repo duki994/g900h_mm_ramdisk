@@ -1,0 +1,52 @@
+case "$1" in
+	CPUFrequencyList)
+		for CPUFREQ in `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies`; do
+		LABEL=$((CPUFREQ / 1000));
+			echo "$CPUFREQ:\"${LABEL} MHz\", ";
+		done;
+	;;
+	LiveCPUTemperature)
+		CPU_C=`awk '{ print $1 / 1000 }' /sys/class/thermal/thermal_zone0/temp`;
+		CPU_F=`awk "BEGIN { print ( ($CPU_C * 1.8) + 32 ) }"`;
+
+		echo "$CPU_C°C | $CPU_F°F";
+	;;
+	LiveCPUFrequencyA7)
+		CPU0=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq 2> /dev/null`;
+		CPU1=`cat /sys/devices/system/cpu/cpu1/cpufreq/scaling_cur_freq 2> /dev/null`;
+		CPU2=`cat /sys/devices/system/cpu/cpu2/cpufreq/scaling_cur_freq 2> /dev/null`;
+		CPU3=`cat /sys/devices/system/cpu/cpu3/cpufreq/scaling_cur_freq 2> /dev/null`;
+		
+		if [ -z "$CPU0" ]; then CPU0="Offline"; else CPU0="$((CPU0 / 1000)) MHz"; fi;
+		if [ -z "$CPU1" ]; then CPU1="Offline"; else CPU1="$((CPU1 / 1000)) MHz"; fi;
+		if [ -z "$CPU2" ]; then CPU2="Offline"; else CPU2="$((CPU2 / 1000)) MHz"; fi;
+		if [ -z "$CPU3" ]; then CPU3="Offline"; else CPU3="$((CPU3 / 1000)) MHz"; fi;
+		
+		echo "Core 0: $CPU0@nCore 1: $CPU1@nCore 2: $CPU2@nCore 3: $CPU3";
+	;;
+	LiveCPUFrequencyA15)
+		CPU4=`cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_cur_freq 2> /dev/null`;
+		CPU5=`cat /sys/devices/system/cpu/cpu5/cpufreq/scaling_cur_freq 2> /dev/null`;
+		CPU6=`cat /sys/devices/system/cpu/cpu6/cpufreq/scaling_cur_freq 2> /dev/null`;
+		CPU7=`cat /sys/devices/system/cpu/cpu7/cpufreq/scaling_cur_freq 2> /dev/null`;
+		
+		if [ -z "$CPU4" ]; then CPU4="Offline"; else CPU4="$((CPU4 / 1000)) MHz"; fi;
+		if [ -z "$CPU5" ]; then CPU5="Offline"; else CPU5="$((CPU5 / 1000)) MHz"; fi;
+		if [ -z "$CPU6" ]; then CPU6="Offline"; else CPU6="$((CPU6 / 1000)) MHz"; fi;
+		if [ -z "$CPU7" ]; then CPU7="Offline"; else CPU7="$((CPU7 / 1000)) MHz"; fi;
+		
+		echo "Core 4: $CPU4@nCore 5: $CPU5@nCore 6: $CPU6@nCore 7: $CPU7";
+	;;
+	LiveGPUFrequency)
+		GPU=`cat /sys/devices/11800000.mali/clock 2> /dev/null`;
+		
+		echo "GPU freq: $GPU";
+	;;
+	LiveBatteryTemperature)
+		BAT_C=`awk '{ print $1 / 10 }' /sys/devices/battery.29/power_supply/battery/batt_temp`;
+		BAT_F=`awk "BEGIN { print ( ($BAT_C * 1.8) + 32 ) }"`;
+		BAT_H=`cat /sys/devices/battery.29/power_supply/battery/health`;
+
+		echo "$BAT_C°C | $BAT_F°F@nHealth: $BAT_H";
+	;;
+esac;

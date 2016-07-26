@@ -1,0 +1,39 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+	name:"Status",
+	elements:[
+		{ SLiveLabel:{
+                        title:"A7 quad-core cluster",
+                        description:"Current frequency.",
+                        refresh:1000,
+                        action:"livecpu LiveCPUFrequencyA7"
+        	}},
+		{ SLiveLabel:{
+       		        title:"A15 quad-core cluster",
+                	description:"Current frequency.",
+                  	refresh:1000,
+                  	action:"livecpu LiveCPUFrequencyA15"
+        	}},
+		{ SLiveLabel:{
+                  	title:"Mali T628-MP6 GPU",
+                  	description:"Current GPU frequency.",
+                  	refresh:1000,
+			action:"livecpu LiveGPUFrequency"
+		}},
+		{ SLiveLabel:{
+                  	title:"CPU temperature",
+                  	description:"Current CPU temperature.",
+                  	refresh:1000,
+			action:"livecpu LiveCPUTemperature"
+		}},
+		{ SLiveLabel:{
+                  	title:"Battery temperature",
+                  	description:"Current battery temperature.",
+                  	refresh:1000,
+			action:"livecpu LiveBatteryTemperature"
+		}}
+	]
+}
+CTAG

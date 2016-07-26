@@ -1,0 +1,23 @@
+#!/sbin/busybox sh
+
+BB=/sbin/busybox;
+
+CONFIG_JSON=/res/synapse/config.json
+ACTION_SCRIPTS=/res/synapse/actions/
+
+if [ ! -f $CONFIG_JSON ]; then
+	$BB mount -t rootfs -o remount,rw rootfs
+	source /res/synapse/json.generate > $CONFIG_JSON
+fi
+
+case "${1}" in
+  config)
+	$BB cat $CONFIG_JSON;;
+  configpath)
+	$BB echo $CONFIG_JSON;;
+  actionpath)
+	$BB echo $ACTION_SCRIPTS:/sbin;;
+  reset)
+		$BB mount -t rootfs -o rw,remount rootfs;
+		$BB rm -f $UCI_CONFIG;;
+esac;

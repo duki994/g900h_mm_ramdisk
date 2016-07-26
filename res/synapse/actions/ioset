@@ -1,0 +1,24 @@
+case "$1" in
+	queue)
+		if [ -f /sys/block/mmcblk0/queue/$2 ]; then
+			if [[ ! -z $3 ]]; then
+				for i in /sys/block/*/queue; do
+					echo $3 > $i/$2 2> /dev/null;
+				done;
+			fi;
+
+			echo `cat /sys/block/mmcblk0/queue/$2`;
+		fi;
+	;;
+	scheduler)
+		if [ -f /sys/block/mmcblk0/queue/scheduler ]; then
+			if [[ ! -z $2 ]]; then
+				for i in /sys/block/mmcblk*/queue/scheduler; do
+					echo $2 > $i 2> /dev/null;
+				done;
+			fi;
+
+			echo `cat /sys/block/mmcblk0/queue/scheduler | sed -n -e '/\[[^]]/s/^[^[]*\[\([^]]*\)].*$/\1/p'`;
+		fi;
+	;;
+esac;

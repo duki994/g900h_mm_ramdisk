@@ -1,0 +1,4 @@
+# reset battery fuel gauge on sec_charger driver based Samsung Exynos models
+
+printf "%d" "1" > /sys/bus/platform/drivers/sec-battery/battery.29/power_supply/battery/batt_reset_soc;
+echo "Battery fuelgauge reset complete!";

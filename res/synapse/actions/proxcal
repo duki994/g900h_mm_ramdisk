@@ -1,0 +1,17 @@
+# script made from a proximity sensor calibration method posted on xda-developers forum
+# http://forum.xda-developers.com/showthread.php?t=2569141
+# all credits to Ammar Saood @ xda and mcelicalderon from which he found fix
+PROX_CAL_DATA=`awk -F',' '{ print $1 }' /sys/devices/virtual/sensors/proximity_sensor/prox_cal`;
+NORMAL_STATE=`cat /sys/devices/virtual/sensors/proximity_sensor/state`;
+CALIBRATION_DATA="";
+
+let CALIBRATION_DATA=PROX_CAL_DATA+NORMAL_STATE;
+
+# now write calibration data
+printf "%x" $CALIBRATION_DATA > /efs/prox_cal;
+
+# set permissions and sync
+chown system:system /efs/prox_cal;
+chmod 644 /efs/prox_cal;
+echo "Calculated and written calibration hex value $(cat /efs/prox_cal)\n";
+sync;

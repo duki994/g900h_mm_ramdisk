@@ -1,0 +1,109 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+	name:"Misc",
+	elements:[
+		{ SPane:{ 
+			title:"Kernel/ROM logs",
+			description:"Clicking buttons below will save logs to /logs folder on your internal memory."
+		}},
+		{ SButton: {
+			label:"Save last_kmsg",
+			action:"tools kmsg"
+		}},
+		{ SButton: {
+			label:"Save dmesg",
+			action:"tools dmesg"
+		}},
+		{ SButton: {
+			label:"Save logcat",
+			action:"tools logcat"
+		}},
+		{ SPane:{ 
+			title:"Calibrate proximity sensor",
+			description:"Calibrate proximity sensor if it doesn't work good (screen goes/stays on/off during and after calls...). Please reboot your phone after calibration if problem persists."
+		}},
+		{ SButton: {
+			label:"Calibrate proximity sensor",
+			action:"proxcal"
+		}}
+`
+PE=\`bool /sys/module/workqueue/parameters/power_efficient\`
+SPI=\`bool /sys/module/mmc_core/parameters/use_spi_crc\`
+SSP_SH=\`notbool /sys/module/wakeup/parameters/enable_sensorhub_wl\`
+SSP=\`notbool /sys/module/wakeup/parameters/enable_sensorhub_wl\`
+L2=\`notbool /sys/module/wakeup/parameters/l2_hsic_wl\`
+echo 		'{ SPane:{ 
+			title:"MMC SPI CRC",
+			description:"Software CRC check on MMC. Produces up to 30% overhead on some systems."
+		}},
+		{ SCheckBox:{
+		   	title:"SPI check on",
+			description: "Checked box == SPI check on",
+		   	default:'$SPI',
+		   	action:"boolean /sys/module/mmc_core/parameters/use_spi_crc"
+		}},
+		{ SPane:{ 
+			title:"Power efficient workqueues",
+			description:"More efficient CPU worqueues with small performance heat and more battery save."
+		}},
+		{ SCheckBox:{
+		   	title:"ON/OFF PE workqueues",
+		   	default:'$PE',
+		   	action:"boolean /sys/module/workqueue/parameters/power_efficient"
+		}},
+		{ SPane:{ 
+			title:"Wakelock control",
+			description:"You can disable wakelocks exposed below. Checked box == disabled wakelock. May lead to reboots."
+		}},
+		{ SCheckBox:{
+		   	title:"ssp_sensorhub_wake_lock",
+		   	default:'$SSP_SH',
+		   	action:"notboolean /sys/module/wakeup/parameters/enable_sensorhub_wl"
+		}},
+		{ SCheckBox:{
+		   	title:"ssp_wake_lock",
+		   	default:'$SSP',
+		   	action:"notboolean /sys/module/wakeup/parameters/enable_sensorhub_wl"
+		}},
+		{ SCheckBox:{
+		   	title:"l2_hsic wakelock",
+		   	description:"This one may lead to reboots if disabled",
+			default:'$L2',
+		   	action:"notboolean /sys/module/wakeup/parameters/l2_hsic_wl"
+		}},'
+`
+		{ STitleBar:{
+			title:"TCP Congestion Control"
+		}},
+		{ SOptionList:{
+			description:"Set the algorithm of internet congestion avoidance, to possibly improve speeds and load times. More info: <a href='https://en.wikipedia.org/wiki/TCP_congestion-avoidance_algorithm'>HERE</a>",
+			default:`cat /proc/sys/net/ipv4/tcp_congestion_control`,
+			action:"generic /proc/sys/net/ipv4/tcp_congestion_control",
+			values:[
+`
+for TCPCC in \`cat /proc/sys/net/ipv4/tcp_available_congestion_control\` ; do
+	echo "\"$TCPCC\",";
+done;
+`
+			]
+		}},
+		{ SPane:{ 
+			title:"SELinux permissive/enforcing control",
+			description:"Checked box == enforcing, unchecked box == permissive"
+		}},
+		{ SCheckBox:{
+		   	default:`cat /sys/fs/selinux/enforce`,
+		   	action:"generic /sys/fs/selinux/enforce"
+		}},
+		{ SPane:{ 
+			title:"Enable Adaptive LMK",
+			description:"When memory pressure is high, LMK will kill apps even if there is enough RAM because of high RAM pressure. Adaptive LMK is good for multitasking and heavy taskloads."
+		}},
+		{ SCheckBox:{
+		   	default:`cat /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk`,
+		   	action:"generic /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk"
+		}},
+	]
+}

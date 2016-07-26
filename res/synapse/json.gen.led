@@ -1,0 +1,64 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+	name:"LED tuning",
+	elements:[
+		{ SPane:{
+		   title:"LED brightness control",
+		   description:"The notification LED has two brightness modes, depending on the external brightness detected by the light sensor."
+		}},
+		{ SSeekBar:{
+			title:"LED brightness in low brightness environments",
+			default:`cat /sys/class/sec/led/led_lowpower_current`,
+			action:"generic /sys/class/sec/led/led_lowpower_current",
+			min:0, step:1, max:120
+		}},
+		{ SSeekBar:{
+			title:"LED brightness in high brightness environments",
+			default:`cat /sys/class/sec/led/led_highpower_current`,
+			action:"generic /sys/class/sec/led/led_highpower_current",
+			min:0, step:1, max:120
+		}},
+		{ SPane:{
+		   title:"LED fading control",
+		   description:"Control the LED fading feature"
+		}},
+		{ SDescription:{
+		   description:"LED fading ON/OFF checkbox below."
+		}},
+		{ SCheckBox:{
+		   	default:`cat /sys/class/sec/led/led_fade`,
+		   	action:"generic /sys/class/sec/led/led_fade"
+		}}
+		{ SSeekBar:{
+			title:"LED fade in time",
+			default:`cat /sys/class/sec/led/led_fade_in_time`,
+			action:"generic /sys/class/sec/led/led_fade_in_time",
+			min:0, step:100, max:1000, unit:"ms"
+		}},
+		{ SSeekBar:{
+			title:"LED fade out time",
+			default:`cat /sys/class/sec/led/led_fade_out_time`,
+			action:"generic /sys/class/sec/led/led_fade_out_time",
+			min:0, step:100, max:2000, unit:"ms"
+		}},
+		{ SPane:{
+		   title:"LED blinking control",
+		   description:"LED blinking control feature."
+		}},
+		{ SSeekBar:{
+			title:"LED blink retention time",
+			default:`cat /sys/class/sec/led/led_blink_retention`,
+			action:"generic /sys/class/sec/led/led_blink_retention",
+			min:0, step:100, max:2000, unit:"ms"
+		}},
+		{ SSeekBar:{
+			title:"LED blink delay (ramping up delay)",
+			default:`cat /sys/class/sec/led/led_blink_delay`,
+			action:"generic /sys/class/sec/led/led_blink_delay",
+			min:0, step:100, max:5000, unit:"ms"
+		}},
+	]
+}
+CTAG

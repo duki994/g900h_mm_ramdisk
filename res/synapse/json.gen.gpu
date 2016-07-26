@@ -1,0 +1,109 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:GPU,
+    elements:[
+	{ SPane:{ title:"GPU voltage control" }},
+`
+while read FREQ VOLT; do
+	echo '{ SSeekBar:{'
+		echo 'title:"'$FREQ' MHz", default:'$VOLT', '
+		echo 'action:"gpuvolt '${FREQ}'", unit:"mV", weight:0.001, min:500000, max:1150000, step:6250 }}, '
+done < /sys/devices/11800000.mali/volt_table
+`
+	{ SPane:{ title:"GPU frequency control control" }},
+	{ SOptionList:{
+	   title:"GPU max freq",
+	   description:"Set the maximum freqency the GPU scales up to. Stock max is 543Mhz. OC up to 677MHz",
+	   default:`cat /sys/devices/platform/gpusysfs/gpu_max_clock`,
+	   unit:"MHz",
+	   action:"generic /sys/devices/platform/gpusysfs/gpu_max_clock",
+	   values:[
+	      677,
+              600,
+	      543,
+	      480,
+	      420,
+	      350,
+	      266,
+	      177,
+	   ]
+	}},
+	{ SOptionList:{
+	   title:"GPU min freq",
+	   description:"Set the minimum freqency the GPU scales down to. Stock min is 177MHz",
+	   default:`cat /sys/devices/platform/gpusysfs/gpu_min_clock`,
+	   unit:"MHz",
+	   action:"generic /sys/devices/platform/gpusysfs/gpu_min_clock",
+	   values:[
+	      420,
+	      350,
+	      266,
+	      177,
+	   ]
+	}},
+	{ SPane:{ title:"GPU governor control" }},
+	{ SLiveLabel:{
+	        title:"Current GPU governor",
+                refresh:1000,
+                action:"generic /sys/devices/11800000.mali/dvfs_governor"
+       	}},
+	{ SOptionList:{
+	   title:"GPU governor selection",
+	   description:"Choose desired GPU governor.",
+	   default:0,
+	   action:"generic /sys/devices/11800000.mali/dvfs_governor",
+	   values:[
+		0,
+		1,
+		2,
+		3,
+	   ]
+	}},
+	{ SPane:{ title:"GPU governor interactive - tunables" }},
+	{ SLiveLabel:{
+	        title:"Current highspeed_load",
+                refresh:1000,
+                action:"generic /sys/devices/11800000.mali/highspeed_load"
+       	}},
+	{ SSeekBar:{
+		title:"Highspeed load",
+		default:`cat /sys/devices/11800000.mali/highspeed_load`,
+		action:"generic /sys/devices/11800000.mali/highspeed_load",
+		unit:"%", min:0, step:1, max:100
+	}},
+	{ SLiveLabel:{
+	        title:"Current highspeed_delay",
+                refresh:1000,
+                action:"generic /sys/devices/11800000.mali/highspeed_delay"
+       	}},
+	{ SSeekBar:{
+		title:"Highspeed delay",
+		default:`cat /sys/devices/11800000.mali/highspeed_delay`,
+		action:"generic /sys/devices/11800000.mali/highspeed_delay",
+		min:0, step:1, max:5
+	}},
+	{ SLiveLabel:{
+	        title:"Current highspeed_clock",
+                refresh:1000,
+                action:"generic /sys/devices/11800000.mali/highspeed_clock"
+       	}},
+	{ SOptionList:{
+	   title:"Highspeed clock",
+	   description:"Ramp up to this frequency when load exceeds highspeed_load (in %) after highspeed_delay. 0 means uninitialized - interactive GPU governor is not set as current GPU governor.",
+	   default:`cat /sys/devices/11800000.mali/highspeed_clock`,
+	   unit:"MHz",
+	   action:"generic /sys/devices/11800000.mali/highspeed_clock",
+	   values:[
+	      677,
+              600,
+	      543,
+	      480,
+	      420,
+		0,
+	   ]
+	}},
+    ]
+}
+CTAG

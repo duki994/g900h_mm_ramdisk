@@ -1,0 +1,32 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:"A15 Cluster",
+    elements:[
+	{ SPane:{
+		title:"CPUFreq scaling"
+	}},        
+	{ SSeekBar:{
+       		title:"CPU max frequency",
+		description:"Set the maximum freqency the CPU scales up to.",
+		default:`cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_max_freq`,
+		action:"generic /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_max_freq",
+		values:{
+`
+			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_freq_table); do
+				LABEL=$(expr $FREQ / 1000)
+				echo "$FREQ:\"${LABEL}MHz\", "
+			done
+`
+		}
+	}},
+`
+while read FREQ VOLT; do
+	echo '{ SSeekBar:{ default:'$VOLT', title:"'$(expr $FREQ / 1000)' MHz"'
+	echo ', action:"c1volt '${FREQ}'", unit:"mV", weight:0.001, min:500000, step:6250, max:1362500 }},'
+done < /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_volt_table
+`
+    ]
+}
+CTAG
