@@ -48,28 +48,42 @@ if [ ! -d /system/etc/init.d ]; then
 	$BB chmod -R 755 /system/etc/init.d/;
 fi;
 
-#chmod everything in res dir
+# chmod everything in res dir
 MOUNT_RW;
 $BB chmod -R 777 /res/*
 
-#### UKSM tuning #####
-# 1000 ms scanning
-$BB echo "1000" > /sys/kernel/mm/uksm/sleep_millisecs
-# medium cpu gov
-$BB echo "medium" > /sys/kernel/mm/uksm/cpu_governor
-########################
 
+IOSCHED_TUNING()
+{
+	for f in /sys/block/mmcblk*/queue;
+	do
+	  echo "zen" > "$f"/scheduler;
+	  TUNABLES="$f"/iosched;
+	  echo "0" > "$f"/nomerges;
+	  echo "512" > "$f"/nr_requests;
+	  echo "1024" > "$f"/read_ahead_kb;
+	  
+	  # zen tunng
+	  echo "2" > "$TUNABLES"/fifo_batch;
+	done;
+}
+IOSCHED_TUNING;
 
-### Set I/O zen ###
-$BB echo "zen" > /sys/block/mmcblk0/queue/scheduler
-$BB echo "1024" > /sys/block/mmcblk0/bdi/read_ahead_kb
-$BB echo "2" >  /sys/block/mmcblk0/queue/nomerges
+# Relax IPA thermal
+$BB echo "70" > /sys/power/ipa/control_temp
+
+# Disable lmk_fast_run
+$BB echo "0" > /sys/module/lowmemorykiller/parameters/lmk_fast_run
 
 # Start any init.d scripts that may be present in the rom or added by the user
 MOUNT_RW;
 $BB chmod -R 755 /system/etc/init.d/
 
+$BB run-parts /system/etc/init.d
+
 # Start uci
 MOUNT_RW;
 $BB sh /res/synapse uci
 $BB ln -s /res/synapse/uci /system/xbin/uci
+
+$BB echo "postboot.sh done\n" >> /sdcard/duki994.txt

@@ -49,7 +49,7 @@ if [ -e /system/xbin/daemonsu ]; then
 	$BB chmod 06755 /system/xbin/daemonsu
 fi
 
-$BB echo "busybox.sh done" > /sdcard/duki994.txt
+$BB echo "busybox.sh done\n" > /sdcard/duki994.txt
 
 # execute my postboot script
 $BB sh /sbin/exynosboot/postboot.sh

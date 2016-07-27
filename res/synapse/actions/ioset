@@ -18,7 +18,6 @@ case "$1" in
 				done;
 			fi;
 
-			echo `cat /sys/block/mmcblk0/queue/scheduler | sed -n -e '/\[[^]]/s/^[^[]*\[\([^]]*\)].*$/\1/p'`;
 		fi;
 	;;
 esac;
