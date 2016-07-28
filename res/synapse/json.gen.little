@@ -10,15 +10,39 @@ cat << CTAG
 	{ SSeekBar:{
        		title:"CPU max frequency",
 		description:"Set the maximum freqency the CPU scales up to.",
-		default:`cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/kfc_max_freq`,
+		default:1300000,
 		action:"generic /sys/devices/system/cpu/cpufreq/mp-cpufreq/kfc_max_freq",
 		values:{
-`
-			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/kfc_freq_table); do
-				LABEL=$(expr $FREQ / 1000)
-				echo "$FREQ:\"${LABEL}MHz\", "
-			done
-`
+			1300000:1300MHz, 
+			1200000:1200MHz, 
+			1100000:1100MHz, 
+			1000000:1000MHz, 
+			900000:900MHz, 
+			800000:800MHz, 
+			700000:700MHz, 
+			600000:600MHz, 
+			500000:500MHz, 
+			400000:400MHz, 
+			300000:300MHz, 
+		}
+	}},
+	{ SSeekBar:{
+       		title:"CPU min frequency",
+		description:"Set the minimum freqency the CPU scales down to. DON'T TOUCH IF YOU DON'T WANT INSTABILITY",
+		default:500000,
+		action:"generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq",
+		values:{
+			1300000:1300MHz, 
+			1200000:1200MHz, 
+			1100000:1100MHz, 
+			1000000:1000MHz, 
+			900000:900MHz, 
+			800000:800MHz, 
+			700000:700MHz, 
+			600000:600MHz, 
+			500000:500MHz, 
+			400000:400MHz, 
+			300000:300MHz, 
 		}
 	}},
 `
