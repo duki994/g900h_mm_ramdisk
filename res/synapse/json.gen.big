@@ -5,7 +5,7 @@ cat << CTAG
     name:"A15 Cluster",
     elements:[
 	{ SPane:{
-		title:"CPUFreq scaling"
+		title:"A15 cluster frequency scaling"
 	}},        
 	{ SSeekBar:{
        		title:"CPU max frequency",
@@ -30,29 +30,9 @@ cat << CTAG
 			500000:500MHz, 
 		}
 	}},
-	{ SSeekBar:{
-       		title:"CPU min frequency",
-		description:"Set the minimum freqency the CPU scales down to. DON'T TOUCH IF YOU DON'T WANT INSTABILITY",
-		default:800000,
-		action:"generic /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_min_freq",
-		values:{
-			1900000:1900MHz, 
-			1800000:1800MHz, 
-			1700000:1700MHz, 
-			1600000:1600MHz, 
-			1500000:1500MHz, 
-			1400000:1400MHz, 
-			1300000:1300MHz, 
-			1200000:1200MHz, 
-			1100000:1100MHz, 
-			1000000:1000MHz, 
-			900000:900MHz, 
-			800000:800MHz, 
-			700000:700MHz, 
-			600000:600MHz, 
-			500000:500MHz, 
-		}
-	}},
+	{ SPane:{
+		title:"A15 cluster voltage control"
+	}}, 
 `
 while read FREQ VOLT; do
 	echo '{ SSeekBar:{ default:'$VOLT', title:"'$(expr $FREQ / 1000)' MHz"'

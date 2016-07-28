@@ -3,6 +3,7 @@
 
 BB=/sbin/busybox
 
+BOOTFREQ=$(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_min_freq)
 
 MOUNT_RW() 
 {
@@ -68,14 +69,6 @@ IOSCHED_TUNING()
 	done;
 }
 IOSCHED_TUNING;
-
-CPU_TUNING_STOCK()
-{
-	# A7 cluster to stock 500MHz min after boot and A15 cluster to 800MHz stock
-	echo "500000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq;
-	echo "800000" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq;
-}
-CPU_TUNING_STOCK;
 
 # Relax IPA thermal
 $BB echo "70" > /sys/power/ipa/control_temp
