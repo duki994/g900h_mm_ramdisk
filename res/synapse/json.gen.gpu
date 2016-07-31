@@ -12,6 +12,13 @@ while read FREQ VOLT; do
 		echo 'action:"gpuvolt '${FREQ}'", unit:"mV", weight:0.001, min:500000, max:1150000, step:6250 }}, '
 done < /sys/devices/11800000.mali/volt_table
 `
+	{ SPane:{ title: "IPA (Intelligent Power Allocation) trigger temp control"}},
+	{ SSeekBar:{
+		title:"Stock kernel has this set to 54 deg",
+		min:50, max:70,
+		default:`cat /sys/power/ipa/control_temp`,
+		action:"generic /sys/power/ipa/control_temp"
+	}},
     ]
 }
 CTAG
