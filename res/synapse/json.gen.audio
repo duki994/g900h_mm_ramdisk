@@ -11,21 +11,24 @@ cat << CTAG
 	{ SSeekBar:{
 		description:"Jack left channel volume",
 		min:80, max:150, unit:"dB", weight:0.5, offset:128,
-		default:`cat /sys/class/misc/wolfson_control/headphone_left`,
-                action:"generic /sys/class/misc/wolfson_control/headphone_left"
+		default:`cat /sys/class/misc/arizona_control/hp_left_dvol`,
+                action:"generic /sys/class/misc/arizona_control/hp_left_dvol"
 	}},
 	{ SSeekBar:{
 		description:"Jack right channel volume",
 		min:80, max:150, unit:"dB", weight:0.5, offset:128,
-		default:`cat /sys/class/misc/wolfson_control/headphone_right`,
-                action:"generic /sys/class/misc/wolfson_control/headphone_right"
+		default:`cat /sys/class/misc/arizona_control/hp_right_dvol`,
+                action:"generic /sys/class/misc/arizona_control/hp_right_dvol"
 	}},
 	{ SCheckBox:{
 		description:"Mixes together left and right channels on the jack output.",
 		label:"Mono Mixer",
-		default:`cat /sys/class/misc/wolfson_control/switch_hp_mono`,
-                action:"generic /sys/class/misc/wolfson_control/switch_hp_mono"
+		default:`cat /sys/class/misc/arizona_control/switch_hp_mono`,
+                action:"generic /sys/class/misc/arizona_control/switch_hp_mono"
 	}},
+	
+	
+
 	{ SPane:{ 
 		title:"Speaker Volume Control",
 		description:"Speaker amplification increases volume on the earpiece. Speaker volumes are expressed as deltas to Samsung's audio profiles, so not to completely override them."
@@ -33,94 +36,148 @@ cat << CTAG
 	{ SSeekBar:{
 		title:"Earpiece speaker volume",
 		min:-8, max:16, unit:"dB", weight:0.5,
-		default:`cat /sys/class/misc/wolfson_control/earpiece_volume`,
-                action:"generic /sys/class/misc/wolfson_control/earpiece_volume"
+		default:`cat /sys/class/misc/arizona_control/ep_dvol`,
+                action:"generic /sys/class/misc/arizona_control/ep_dvol"
 	}},
-	{ SSeekBar:{
-		title:"Main speaker volume",
-		min:-8, max:16, unit:"dB", weight:0.5,
-		default:`cat /sys/class/misc/wolfson_control/speaker_volume`,
-                action:"generic /sys/class/misc/wolfson_control/speaker_volume"
-	}},
-	{ SPane:{
-		title:"Headphone equalizer controls",
-		description:"Wolfson hardware equalizer controls for headphones"
+	
+	
+	
+	{ SPane:{ 
+		title:"Main Equalizer (Combined / Left Channel)",
+		description:"The controls use the audio SoC's integrated hardware equalizers."
 	}},
 	{ SCheckBox:{
-		description:"Switch heaphone hardware equalizer ON/OFF. Normal starting gain is 12dB.",
-		label:"Headphone EQ ON/OFF",
-		default:`cat /sys/class/misc/wolfson_control/switch_eq_headphone`,
-                action:"generic /sys/class/misc/wolfson_control/switch_eq_headphone"
+		label:"Enable Equalizer",
+		default:`cat /sys/class/misc/arizona_control/switch_eq_hp`,
+                action:"generic /sys/class/misc/arizona_control/switch_eq_hp"
 	}},
 	{ SSeekBar:{
-		title:"Headphone Band 1 gain",
-		min:0, max:24, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_1`,
-		action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_1"
+		title:"Band 1 gain",
+		description:"Cutoff-frequency: 25 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpl_gain_1`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpl_gain_1"
 	}},
 	{ SSeekBar:{
-		title:"Headphone Band 2 gain",
-		min:0, max:24, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_2`,
-		action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_2"
+		title:"Band 2 gain",
+		description:"Center-frequency: 200 Hz, bandwidth: 100 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpl_gain_2`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpl_gain_2"
 	}},
 	{ SSeekBar:{
-		title:"Headphone Band 3 gain",
-		min:0, max:24, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_3`,
-		action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_3"
+		title:"Band 3 gain",
+		description:"Center-frequency: 500 Hz, bandwidth: 250 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpl_gain_3`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpl_gain_3"
 	}},
 	{ SSeekBar:{
-		title:"Headphone Band 4 gain",
-		min:0, max:24, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_4`,
-		action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_4"
+		title:"Band 4 gain",
+		description:"Center-frequency: 1000 Hz, bandwidth: 500 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpl_gain_4`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpl_gain_4"
 	}},
 	{ SSeekBar:{
-		title:"Headphone Band 5 gain",
-		min:0, max:24, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_5`,
-		action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_5"
+		title:"Band 5 gain",
+		description:"Center-frequency: 2000 Hz, bandwidth: 1000 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpl_gain_5`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpl_gain_5"
 	}},
-	{ SPane:{
-		title:"Speaker equalizer controls",
-		description:"Wolfson hardware equalizer controls for speaker"
+	{ SSeekBar:{
+		title:"Band 6 gain",
+		description:"Center-frequency: 4000 Hz, bandwidth: 2000 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpl_gain_6`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpl_gain_6"
 	}},
+	{ SSeekBar:{
+		title:"Band 7 gain",
+		description:"Center-frequency: 8000 Hz, bandwidth: 4000 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpl_gain_7`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpl_gain_7"
+	}},
+	{ SSeekBar:{
+		title:"Band 8 gain",
+		description:"Cutoff-frequency: 16000 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpl_gain_8`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpl_gain_8"
+	}},
+	
+	
+	
+	
+	
+	{ SPane:{ 
+		title:"Advanced Stereo Equalizer (Right Channel)",
+	}},
+	
 	{ SCheckBox:{
-		description:"Switch speaker hardware equalizer ON/OFF",
-		label:"Speaker EQ ON/OFF",
-		default:`cat /sys/class/misc/wolfson_control/switch_eq_speaker`,
-                action:"generic /sys/class/misc/wolfson_control/switch_eq_speaker"
+		description:"Uses separate gain values for left and right audio channels that can be then individually controlled.",
+		label:"Enable Per-Channel Controls",
+		default:`cat /sys/class/misc/arizona_control/switch_eq_hp_per_ch`,
+                action:"generic /sys/class/misc/arizona_control/switch_eq_hp_per_ch"
+	}},
+	
+	{ SSeekBar:{
+		title:"Band 1 gain",
+		description:"Cutoff-frequency: 25 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpr_gain_1`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpr_gain_1"
 	}},
 	{ SSeekBar:{
-		title:"Speaker Band 1 gain",
+		title:"Band 2 gain",
+		description:"Center-frequency: 200 Hz, bandwidth: 100 Hz",
 		min:-12, max:12, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_1`,
-		action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_1"
+		default:`cat /sys/class/misc/arizona_control/eq_hpr_gain_2`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpr_gain_2"
 	}},
 	{ SSeekBar:{
-		title:"Speaker Band 2 gain",
+		title:"Band 3 gain",
+		description:"Center-frequency: 500 Hz, bandwidth: 250 Hz",
 		min:-12, max:12, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_2`,
-		action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_2"
+		default:`cat /sys/class/misc/arizona_control/eq_hpr_gain_3`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpr_gain_3"
 	}},
 	{ SSeekBar:{
-		title:"Speaker Band 3 gain",
+		title:"Band 4 gain",
+		description:"Center-frequency: 1000 Hz, bandwidth: 500 Hz",
 		min:-12, max:12, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_3`,
-		action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_3"
+		default:`cat /sys/class/misc/arizona_control/eq_hpr_gain_4`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpr_gain_4"
 	}},
 	{ SSeekBar:{
-		title:"Speaker Band 4 gain",
+		title:"Band 5 gain",
+		description:"Center-frequency: 2000 Hz, bandwidth: 1000 Hz",
 		min:-12, max:12, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_4`,
-		action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_4"
+		default:`cat /sys/class/misc/arizona_control/eq_hpr_gain_5`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpr_gain_5"
 	}},
 	{ SSeekBar:{
-		title:"Speaker Band 5 gain",
+		title:"Band 6 gain",
+		description:"Center-frequency: 4000 Hz, bandwidth: 2000 Hz",
 		min:-12, max:12, unit:"dB",
-		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_5`,
-		action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_5"
+		default:`cat /sys/class/misc/arizona_control/eq_hpr_gain_6`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpr_gain_6"
+	}},
+	{ SSeekBar:{
+		title:"Band 7 gain",
+		description:"Center-frequency: 8000 Hz, bandwidth: 4000 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpr_gain_7`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpr_gain_7"
+	}},
+	{ SSeekBar:{
+		title:"Band 8 gain",
+		description:"Cutoff-frequency: 16000 Hz",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/eq_hpr_gain_8`,
+                action:"generic /sys/class/misc/arizona_control/eq_hpr_gain_8"
 	}},
     ]
 }
