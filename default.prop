@@ -19,6 +19,6 @@ debug.atrace.tags.enableflags=0
 #
 # BOOTIMAGE_BUILD_PROPERTIES
 #
-ro.bootimage.build.date=Thu Jul 28 20:29:42 CEST 2016
-ro.bootimage.build.date.utc=1469730582
+ro.bootimage.build.date=Sun Jul 31 21:04:56 CEST 2016
+ro.bootimage.build.date.utc=1469991896
 ro.bootimage.build.fingerprint=samsung/k3gxx/k3g:6.0.1/MMB29K/G900HXXU1CPE6:user/test-keys
