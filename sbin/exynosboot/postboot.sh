@@ -71,10 +71,17 @@ IOSCHED_TUNING()
 IOSCHED_TUNING;
 
 # Relax IPA thermal
+$BB chmod 777 /sys/power/ipa/control_temp
+
 $BB echo "70" > /sys/power/ipa/control_temp
 
 # Disable lmk_fast_run
 $BB echo "0" > /sys/module/lowmemorykiller/parameters/lmk_fast_run
+
+# Tune entropy
+$BB echo "512" > /proc/sys/kernel/random/read_wakeup_threshold
+
+$BB echo "256" > /proc/sys/kernel/random/write_wakeup_threshold
 
 # Start any init.d scripts that may be present in the rom or added by the user
 MOUNT_RW;

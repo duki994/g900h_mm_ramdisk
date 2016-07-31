@@ -29,11 +29,7 @@ cat << CTAG
 			action:"proxcal"
 		}}
 `
-PE=\`bool /sys/module/workqueue/parameters/power_efficient\`
 SPI=\`bool /sys/module/mmc_core/parameters/use_spi_crc\`
-SSP_SH=\`notbool /sys/module/wakeup/parameters/enable_sensorhub_wl\`
-SSP=\`notbool /sys/module/wakeup/parameters/enable_sensorhub_wl\`
-L2=\`notbool /sys/module/wakeup/parameters/l2_hsic_wl\`
 echo 		'{ SPane:{ 
 			title:"MMC SPI CRC",
 			description:"Software CRC check on MMC. Produces up to 30% overhead on some systems."
@@ -43,35 +39,6 @@ echo 		'{ SPane:{
 			description: "Checked box == SPI check on",
 		   	default:'$SPI',
 		   	action:"boolean /sys/module/mmc_core/parameters/use_spi_crc"
-		}},
-		{ SPane:{ 
-			title:"Power efficient workqueues",
-			description:"More efficient CPU worqueues with small performance heat and more battery save."
-		}},
-		{ SCheckBox:{
-		   	title:"ON/OFF PE workqueues",
-		   	default:'$PE',
-		   	action:"boolean /sys/module/workqueue/parameters/power_efficient"
-		}},
-		{ SPane:{ 
-			title:"Wakelock control",
-			description:"You can disable wakelocks exposed below. Checked box == disabled wakelock. May lead to reboots."
-		}},
-		{ SCheckBox:{
-		   	title:"ssp_sensorhub_wake_lock",
-		   	default:'$SSP_SH',
-		   	action:"notboolean /sys/module/wakeup/parameters/enable_sensorhub_wl"
-		}},
-		{ SCheckBox:{
-		   	title:"ssp_wake_lock",
-		   	default:'$SSP',
-		   	action:"notboolean /sys/module/wakeup/parameters/enable_sensorhub_wl"
-		}},
-		{ SCheckBox:{
-		   	title:"l2_hsic wakelock",
-		   	description:"This one may lead to reboots if disabled",
-			default:'$L2',
-		   	action:"notboolean /sys/module/wakeup/parameters/l2_hsic_wl"
 		}},'
 `
 		{ STitleBar:{
