@@ -39,9 +39,15 @@ cat << CTAG
 		default:`cat /sys/class/misc/arizona_control/ep_dvol`,
                 action:"generic /sys/class/misc/arizona_control/ep_dvol"
 	}},
-	
-	
-	
+	{ SSeekBar:{
+		title:"Main speaker gain",
+		min:-12, max:12, unit:"dB",
+		default:`cat /sys/class/misc/arizona_control/speaker_volume`,
+                action:"spkvol /sys/class/misc/arizona_control/speaker_volume"
+	}},
+
+
+
 	{ SPane:{ 
 		title:"Main Equalizer (Combined / Left Channel)",
 		description:"The controls use the audio SoC's integrated hardware equalizers."
