@@ -3,7 +3,6 @@
 
 BB=/sbin/busybox
 
-BOOTFREQ=$(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_min_freq)
 
 MOUNT_RW() 
 {
@@ -70,24 +69,42 @@ IOSCHED_TUNING()
 }
 IOSCHED_TUNING;
 
+
+
 # Relax IPA thermal
 $BB chmod 777 /sys/power/ipa/control_temp
 
 $BB echo "70" > /sys/power/ipa/control_temp
 
+
+
 # Disable lmk_fast_run
 $BB echo "0" > /sys/module/lowmemorykiller/parameters/lmk_fast_run
+
+
 
 # Tune entropy
 $BB echo "512" > /proc/sys/kernel/random/read_wakeup_threshold
 
 $BB echo "256" > /proc/sys/kernel/random/write_wakeup_threshold
 
+
+
+# Properly calibrate sound-control HP equalizer freqs. Thanks to @AndreiLux <https://www.github.com/AndreiLux>
+
+$BB echo "0x0FF3 0x041E 0x0034 0x1FC8 0xF035 0x040D 0x00D2 0x1F6B 0xF084 0x0409 0x020B 0x1EB8 0xF104 0x0409 0x0406 0x0E08 0x0782 0x2ED8" > /sys/class/misc/arizona_control/eq_A_freqs
+
+$BB echo "0x0C47 0x03F5 0x0EE4 0x1D04 0xF1F7 0x040B 0x07C8 0x187D 0xF3B9 0x040A 0x0EBE 0x0C9E 0xF6C3 0x040A 0x1AC7 0xFBB6 0x0400 0x2ED8" > /sys/class/misc/arizona_control/eq_B_freqs
+
+
+
 # Start any init.d scripts that may be present in the rom or added by the user
 MOUNT_RW;
 $BB chmod -R 755 /system/etc/init.d/
 
 $BB run-parts /system/etc/init.d
+
+
 
 # Start uci
 MOUNT_RW;
