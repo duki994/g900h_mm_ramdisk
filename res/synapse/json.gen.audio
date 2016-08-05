@@ -50,12 +50,7 @@ cat << CTAG
 
 	{ SPane:{ 
 		title:"Main Equalizer (Combined / Left Channel)",
-		description:"The controls use the audio SoC's integrated hardware equalizers."
-	}},
-	{ SCheckBox:{
-		label:"Enable Equalizer",
-		default:`cat /sys/class/misc/arizona_control/switch_eq_hp`,
-                action:"generic /sys/class/misc/arizona_control/switch_eq_hp"
+		description:"The controls use the audio SoC's integrated hardware equalizers. Main equalizer (Combined / Left channel) is always on."
 	}},
 	{ SSeekBar:{
 		title:"Band 1 gain",

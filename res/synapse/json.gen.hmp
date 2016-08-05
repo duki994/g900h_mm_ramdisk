@@ -6,7 +6,7 @@ cat << CTAG
 	elements:[
 		{ SPane:{ 
 			title:"HMP thresholds",
-			description:"down_threshold is MINIMUM load threshold when tasks are being migrated from A15 (high-performance cluster) to A7 (power-saving cluster) cores.Lower the value => more tasks on A7 cores. up_threshold definition: MAXIMUM load before tasks are migrated from A7 to A15 cores. Lower the value => better performance but more heat and battery drain."
+			description:"HMP down_threshold is MINIMUM load threshold when tasks are being migrated from A15 (high-performance cluster) to A7 (power-saving cluster) cores. Higher the value => more tasks on A7 cores. HMP up_threshold definition: MAXIMUM load before tasks are migrated from A7 to A15 cores. Lower the value => better performance (more tasks on A15 cores) but more heat and battery drain."
 		}},
 		{ SSeekBar:{
 			title:"HMP down_threshold",
@@ -18,7 +18,7 @@ cat << CTAG
 			title:"HMP up_threshold",
 			default:`cat /sys/kernel/hmp/up_threshold`,
 			action:"generic /sys/kernel/hmp/up_threshold",
-			min:0, step:1, max:750
+			min:0, step:1, max:950
 		}},
 	]
 }
