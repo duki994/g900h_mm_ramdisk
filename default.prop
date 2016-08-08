@@ -19,6 +19,14 @@ debug.atrace.tags.enableflags=0
 #
 # BOOTIMAGE_BUILD_PROPERTIES
 #
-ro.bootimage.build.date=Fri Aug  5 14:24:08 CEST 2016
-ro.bootimage.build.date.utc=1470399848
+ro.bootimage.build.date=Mon Aug  8 16:21:48 CEST 2016
+ro.bootimage.build.date.utc=1470666108
 ro.bootimage.build.fingerprint=samsung/k3gxx/k3g:6.0.1/MMB29K/G900HXXU1CPE6:user/test-keys
+
+## Additional overrides - Dusan K. ##
+persist.security.ams.enforcing=0
+ro.securestorage.knox=false
+ro.securestorage.support=false
+ro.security.mdpp.ux=Disabled
+wlan.wfd.hdcp=disable
+ro.config.tima=0
