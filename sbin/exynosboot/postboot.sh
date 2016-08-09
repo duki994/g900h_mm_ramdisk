@@ -78,8 +78,14 @@ $BB echo "70" > /sys/power/ipa/control_temp
 
 
 
-# Disable lmk_fast_run
+### LMK tuning ###
 $BB echo "0" > /sys/module/lowmemorykiller/parameters/lmk_fast_run
+
+
+# LMK
+$BB echo "1" > /sys/module/lowmemorykiller/parameters/donotkill_sysproc
+
+$BB echo "com.android.systemui, android.process.acore, com.android.contacts" > /sys/module/lowmemorykiller/parameters/donotkill_sysproc_names
 
 
 
