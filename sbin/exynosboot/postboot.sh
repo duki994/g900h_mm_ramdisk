@@ -79,15 +79,9 @@ $BB echo "70" > /sys/power/ipa/control_temp
 
 
 ### LMK tuning ###
-$BB echo "0" > /sys/module/lowmemorykiller/parameters/lmk_fast_run
+$BB echo "1" > /sys/module/lowmemorykiller/parameters/lmk_fast_run
 
-
-# LMK
-$BB echo "1" > /sys/module/lowmemorykiller/parameters/donotkill_sysproc
-
-$BB echo "ndroid.systemui, d.process.acore, ndroid.contacts, system:ui" > /sys/module/lowmemorykiller/parameters/donotkill_sysproc_names
-
-
+$BB echo "2" > /sys/module/lowmemorykiller/parameters/debug_level
 
 # Tune entropy
 $BB echo "512" > /proc/sys/kernel/random/read_wakeup_threshold
