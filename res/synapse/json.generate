@@ -1,5 +1,7 @@
 #!/sbin/busybox sh
 
+BB=/sbin/busybox
+
 bool() {
   [ `cat $1` == "Y" ] && echo "1";
   [ `cat $1` == "N" ] && echo "0";
@@ -9,6 +11,11 @@ bool() {
 notbool() {
   [ `cat $1` == "Y" ] && echo "0";
   [ `cat $1` == "N" ] && echo "1";
+}
+
+readColour() {
+	P=/sys/class/mdnie/mdnie/controls
+	$BB echo $($BB printf "#%02X%02X%02X\n" $($BB cat $P/$1_red) $($BB cat $P/$1_green) $($BB cat $P/$1_blue))
 }
 
 cat << CTAG
@@ -25,6 +32,7 @@ cat << CTAG
 		`source /res/synapse/json.gen.io`,
 		`source /res/synapse/json.gen.hmp`,
 		`source /res/synapse/json.gen.led`,
+		`source /res/synapse/json.gen.display`,
 		`source /res/synapse/json.gen.misc`
     ]
 }
