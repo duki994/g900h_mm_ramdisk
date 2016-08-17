@@ -1,3 +1,5 @@
+BB=/sbin/busybox
+
 if [[ ! -z $2 ]]; then
 	let "RC=($((16$2)) & 16711680) >> 16";
 	let "GC=($((16$2)) & 65280) >> 8";
@@ -22,7 +24,7 @@ wide_black)
 		echo $BC > $P/$1_blue
 	fi
 
-	echo $(printf "#%02X%02X%02X\n" $(cat $P/$1_red) $(cat $P/$1_green) $(cat $P/$1_blue))
+	$BB echo $($BB printf "#%02X%02X%02X\n" $($BB cat $P/$1_red) $($BB cat $P/$1_green) $($BB cat $P/$1_blue))
 	;;
 led_noti)
 	P=/sys/class/sec/led/led_noti_
@@ -33,7 +35,7 @@ led_noti)
 		echo $BC > $Pb
 	fi
 
-	echo $(printf "#%02X%02X%02X\n" $(cat $Pr) $(cat $Pg) $(cat $Pb))
+	$BB echo $($BB printf "#%02X%02X%02X\n" $($BB cat $Pr) $($BB cat $Pg) $($BB cat $Pb))
 	;;
 
 esac
